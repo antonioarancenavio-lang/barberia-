@@ -156,5 +156,11 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['subscriptions']['Row']>;
       };
     };
+    Functions: {
+      slug_is_available: {
+        Args: { check_slug: string };
+        Returns: boolean;
+      };
+    };
   };
 }
