@@ -42,13 +42,13 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+      setLoading(true);
     setError(null);
 
     const slug = slugify(form.slug);
 
     // 1. Comprobar disponibilidad del slug
-    const { data: available, error: slugError } = await supabase.rpc('slug_is_available', {
+    const { data: available, error: slugError } = await (supabase.rpc as any)('slug_is_available', {
       check_slug: slug,
     });
 
