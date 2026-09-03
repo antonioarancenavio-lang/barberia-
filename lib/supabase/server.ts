@@ -1,6 +1,5 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import type { Database } from '@/types/database.types';
 
 /**
  * Cliente de Supabase para usar en Server Components, Server Actions y Route Handlers.
@@ -9,7 +8,7 @@ import type { Database } from '@/types/database.types';
 export function createClient() {
   const cookieStore = cookies();
 
-  return createServerClient<Database>(
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -43,7 +42,7 @@ export function createClient() {
  */
 export function createServiceRoleClient() {
   const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  return createSupabaseClient<Database>(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
