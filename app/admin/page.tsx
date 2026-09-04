@@ -1,8 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { AdminClient } from './AdminClient';
 
-// Placeholder de Fase 1. El panel completo (listado de barberias, suspender,
-// ingresos, planes) se construye en la Fase 5.
 export default async function AdminPage() {
   const supabase = createClient();
 
@@ -12,22 +11,26 @@ export default async function AdminPage() {
 
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
 
   if (profile?.role !== 'platform_admin') {
     redirect('/dashboard');
   }
 
+  const [{ data: barbershops }, { count: totalUsers }, { count: totalAppointments }] = await Promise.all([
+    supabase
+      .from('barbershops')
+      .select('id, name, slug, city, status, plan, created_at, appointments(count)')
+      .order('created_at', { ascending: false }),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }),
+    supabase.from('appointments').select('*', { count: 'exact', head: true }),
+  ]);
+
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="text-2xl font-bold">Panel de administrador</h1>
-      <p className="mt-2 text-gray-600">
-        Listado de barberías, suscripciones e ingresos llegan en la Fase 5.
-      </p>
-    </main>
+    <AdminClient
+      initialBarbershops={barbershops ?? []}
+      totalUsers={totalUsers ?? 0}
+      totalAppointments={totalAppointments ?? 0}
+    />
   );
 }
