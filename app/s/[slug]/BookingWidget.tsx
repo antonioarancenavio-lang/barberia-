@@ -8,6 +8,9 @@ type Service = { id: string; name: string; description: string | null; price: nu
 type Barber = { id: string; name: string; photo_url: string | null };
 type BusinessHour = { day_of_week: number; open_time: string | null; close_time: string | null; closed: boolean };
 
+const STEPS = ['servicio', 'barbero', 'fecha', 'datos'] as const;
+type Step = (typeof STEPS)[number];
+
 export function BookingWidget({
   barbershopId,
   services,
@@ -21,7 +24,7 @@ export function BookingWidget({
 }) {
   const supabase = createClient();
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [step, setStep] = useState<Step>('servicio');
   const [serviceId, setServiceId] = useState<string | null>(null);
   const [barberId, setBarberId] = useState<string | null>(null);
   const [date, setDate] = useState('');
@@ -37,8 +40,34 @@ export function BookingWidget({
 
   const service = useMemo(() => services.find((s) => s.id === serviceId) ?? null, [services, serviceId]);
   const barber = useMemo(() => barbers.find((b) => b.id === barberId) ?? null, [barbers, barberId]);
-
+  const stepIndex = STEPS.indexOf(step);
   const todayISO = new Date().toISOString().slice(0, 10);
+
+  function goTo(next: Step) {
+    setError(null);
+    setStep(next);
+  }
+
+  function goBack() {
+    if (stepIndex === 0) return;
+    goTo(STEPS[stepIndex - 1]);
+  }
+
+  function selectService(s: Service) {
+    setServiceId(s.id);
+    setDate('');
+    setSlots([]);
+    setSelectedSlot(null);
+    goTo('barbero');
+  }
+
+  function selectBarber(b: Barber) {
+    setBarberId(b.id);
+    setDate('');
+    setSlots([]);
+    setSelectedSlot(null);
+    goTo('fecha');
+  }
 
   async function handleDateChange(value: string) {
     setDate(value);
@@ -87,6 +116,11 @@ export function BookingWidget({
     setLoadingSlots(false);
   }
 
+  function selectSlot(slot: Slot) {
+    setSelectedSlot(slot);
+    goTo('datos');
+  }
+
   async function handleConfirm() {
     if (!service || !barber || !selectedSlot) return;
     setSubmitting(true);
@@ -105,11 +139,9 @@ export function BookingWidget({
     });
 
     if (insertError) {
-      // El constraint EXCLUDE de la BD salta aqui si alguien reservo ese hueco
-      // justo antes que tu.
-      setError('Ese horario se acaba de ocupar. Elige otra hora, por favor.');
+      setError('Ese horario se acaba de ocupar. Elige otra hora.');
       setSubmitting(false);
-      setStep(4);
+      goTo('fecha');
       return;
     }
 
@@ -119,153 +151,203 @@ export function BookingWidget({
 
   if (confirmed) {
     return (
-      <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
-        <h3 className="text-xl font-semibold text-green-800">¡Cita confirmada!</h3>
-        <p className="mt-2 text-green-700">
+      <div className="mx-auto max-w-sm rounded-3xl bg-white px-8 py-12 text-center shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f5f7]">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#1d1d1f"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <h3 className="text-[22px] font-semibold tracking-tight text-[#1d1d1f]">Cita confirmada</h3>
+        <p className="mx-auto mt-2 max-w-[240px] text-[15px] leading-snug text-[#86868b]">
           {service?.name} con {barber?.name}
-          <br />
-          {selectedSlot && new Date(selectedSlot.startISO).toLocaleString('es-ES')}
         </p>
-        <p className="mt-4 text-sm text-green-600">Te esperamos. Recibirás confirmación por parte de la barbería.</p>
+        <p className="mt-1 text-[15px] font-medium text-[#1d1d1f]">
+          {selectedSlot &&
+            new Date(selectedSlot.startISO).toLocaleString('es-ES', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 p-6">
-      {/* Paso 1: servicio */}
-      <div className="mb-6">
-        <p className="mb-2 text-sm font-medium text-gray-500">1. Elige un servicio</p>
-        <div className="flex flex-col gap-2">
-          {services.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => {
-                setServiceId(s.id);
-                setStep(2);
-                setDate('');
-                setSlots([]);
-                setSelectedSlot(null);
-              }}
-              className={`rounded-lg border px-4 py-2 text-left ${
-                serviceId === s.id ? 'border-brand bg-gray-50' : 'border-gray-200'
-              }`}
-            >
-              <span className="font-medium">{s.name}</span>
-              <span className="ml-2 text-sm text-gray-500">
-                {s.price}€ · {s.duration_minutes} min
-              </span>
-            </button>
-          ))}
-        </div>
+    <div className="mx-auto max-w-sm">
+      {/* Barra de progreso */}
+      <div className="mb-6 flex gap-1.5">
+        {STEPS.map((s, i) => (
+          <div
+            key={s}
+            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+              i <= stepIndex ? 'bg-[#1d1d1f]' : 'bg-[#e5e5e7]'
+            }`}
+          />
+        ))}
       </div>
 
-      {/* Paso 2: barbero */}
-      {service && (
-        <div className="mb-6">
-          <p className="mb-2 text-sm font-medium text-gray-500">2. Elige un barbero</p>
-          <div className="flex flex-wrap gap-2">
-            {barbers.map((b) => (
-              <button
-                key={b.id}
-                type="button"
-                onClick={() => {
-                  setBarberId(b.id);
-                  setStep(3);
-                  setDate('');
-                  setSlots([]);
-                  setSelectedSlot(null);
-                }}
-                className={`rounded-lg border px-4 py-2 ${
-                  barberId === b.id ? 'border-brand bg-gray-50' : 'border-gray-200'
-                }`}
-              >
-                {b.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Paso 3: fecha */}
-      {service && barber && (
-        <div className="mb-6">
-          <p className="mb-2 text-sm font-medium text-gray-500">3. Elige una fecha</p>
-          <input
-            type="date"
-            min={todayISO}
-            value={date}
-            onChange={(e) => handleDateChange(e.target.value)}
-            className="rounded-lg border border-gray-300 px-4 py-2"
-          />
-        </div>
-      )}
-
-      {/* Paso 4: hora */}
-      {date && (
-        <div className="mb-6">
-          <p className="mb-2 text-sm font-medium text-gray-500">4. Elige una hora</p>
-          {loadingSlots && <p className="text-sm text-gray-400">Cargando horarios...</p>}
-          {!loadingSlots && slots.length === 0 && (
-            <p className="text-sm text-gray-400">No hay horarios disponibles ese día.</p>
+      <div className="rounded-3xl bg-white px-6 py-8 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+        {/* Cabecera: volver + resumen de lo ya elegido */}
+        <div className="mb-6 flex min-h-[20px] items-center gap-2">
+          {stepIndex > 0 && (
+            <button
+              onClick={goBack}
+              aria-label="Atrás"
+              className="-ml-1 flex h-7 w-7 items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           )}
-          <div className="flex flex-wrap gap-2">
-            {slots.map((slot) => (
-              <button
-                key={slot.startISO}
-                type="button"
-                onClick={() => {
-                  setSelectedSlot(slot);
-                  setStep(5);
-                }}
-                className={`rounded-lg border px-3 py-1.5 text-sm ${
-                  selectedSlot?.startISO === slot.startISO ? 'border-brand bg-gray-50' : 'border-gray-200'
-                }`}
-              >
-                {slot.label}
-              </button>
-            ))}
-          </div>
+          <p className="truncate text-[13px] text-[#86868b]">
+            {[service?.name, barber?.name].filter(Boolean).join(' · ') || 'Reserva tu cita'}
+          </p>
         </div>
-      )}
 
-      {/* Paso 5: datos del cliente */}
-      {selectedSlot && (
-        <div className="flex flex-col gap-3">
-          <p className="text-sm font-medium text-gray-500">5. Tus datos</p>
-          <input
-            required
-            placeholder="Nombre"
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-            className="rounded-lg border border-gray-300 px-4 py-2"
-          />
-          <input
-            required
-            placeholder="Teléfono"
-            value={clientPhone}
-            onChange={(e) => setClientPhone(e.target.value)}
-            className="rounded-lg border border-gray-300 px-4 py-2"
-          />
-          <input
-            type="email"
-            placeholder="Email (opcional)"
-            value={clientEmail}
-            onChange={(e) => setClientEmail(e.target.value)}
-            className="rounded-lg border border-gray-300 px-4 py-2"
-          />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <button
-            type="button"
-            disabled={!clientName || !clientPhone || submitting}
-            onClick={handleConfirm}
-            className="rounded-lg bg-brand px-4 py-2 text-white hover:bg-brand-light disabled:opacity-50"
-          >
-            {submitting ? 'Confirmando...' : 'Confirmar cita'}
-          </button>
-        </div>
-      )}
+        {/* Paso: servicio */}
+        {step === 'servicio' && (
+          <div key="servicio" className="animate-[fadeIn_0.25s_ease]">
+            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Qué servicio quieres?</h2>
+            <div className="flex flex-col gap-2">
+              {services.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => selectService(s)}
+                  className="flex items-center justify-between rounded-2xl border border-[#e5e5e7] px-4 py-3.5 text-left transition hover:border-[#1d1d1f]"
+                >
+                  <span>
+                    <span className="block text-[15px] font-medium text-[#1d1d1f]">{s.name}</span>
+                    <span className="block text-[13px] text-[#86868b]">{s.duration_minutes} min</span>
+                  </span>
+                  <span className="text-[15px] font-medium text-[#1d1d1f]">{s.price}€</span>
+                </button>
+              ))}
+              {services.length === 0 && <p className="text-[15px] text-[#86868b]">Aún no hay servicios disponibles.</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Paso: barbero */}
+        {step === 'barbero' && (
+          <div key="barbero" className="animate-[fadeIn_0.25s_ease]">
+            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Con quién?</h2>
+            <div className="flex flex-col gap-2">
+              {barbers.map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => selectBarber(b)}
+                  className="flex items-center gap-3 rounded-2xl border border-[#e5e5e7] px-4 py-3.5 text-left transition hover:border-[#1d1d1f]"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f5f5f7] text-[14px] font-medium text-[#1d1d1f]">
+                    {b.name.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="text-[15px] font-medium text-[#1d1d1f]">{b.name}</span>
+                </button>
+              ))}
+              {barbers.length === 0 && <p className="text-[15px] text-[#86868b]">Aún no hay barberos disponibles.</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Paso: fecha y hora */}
+        {step === 'fecha' && (
+          <div key="fecha" className="animate-[fadeIn_0.25s_ease]">
+            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
+            <input
+              type="date"
+              min={todayISO}
+              value={date}
+              onChange={(e) => handleDateChange(e.target.value)}
+              className="w-full rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] text-[#1d1d1f] focus:border-[#1d1d1f] focus:outline-none"
+            />
+
+            {date && (
+              <div className="mt-5">
+                {loadingSlots && <p className="text-[14px] text-[#86868b]">Buscando horarios...</p>}
+                {!loadingSlots && slots.length === 0 && (
+                  <p className="text-[14px] text-[#86868b]">No hay horarios disponibles ese día.</p>
+                )}
+                {slots.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {slots.map((slot) => (
+                      <button
+                        key={slot.startISO}
+                        type="button"
+                        onClick={() => selectSlot(slot)}
+                        className="rounded-xl border border-[#e5e5e7] py-2.5 text-[14px] font-medium text-[#1d1d1f] transition hover:border-[#1d1d1f]"
+                      >
+                        {slot.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Paso: datos del cliente */}
+        {step === 'datos' && (
+          <div key="datos" className="animate-[fadeIn_0.25s_ease]">
+            <h2 className="mb-1 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">Tus datos</h2>
+            {selectedSlot && (
+              <p className="mb-5 text-[14px] text-[#86868b]">
+                {new Date(selectedSlot.startISO).toLocaleString('es-ES', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </p>
+            )}
+            <div className="flex flex-col gap-3">
+              <input
+                required
+                placeholder="Nombre"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] focus:border-[#1d1d1f] focus:outline-none"
+              />
+              <input
+                required
+                placeholder="Teléfono"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] focus:border-[#1d1d1f] focus:outline-none"
+              />
+              <input
+                type="email"
+                placeholder="Email (opcional)"
+                value={clientEmail}
+                onChange={(e) => setClientEmail(e.target.value)}
+                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] focus:border-[#1d1d1f] focus:outline-none"
+              />
+              {error && <p className="text-[14px] text-red-600">{error}</p>}
+              <button
+                type="button"
+                disabled={!clientName || !clientPhone || submitting}
+                onClick={handleConfirm}
+                className="mt-2 rounded-full bg-[#1d1d1f] py-3.5 text-[15px] font-medium text-white transition hover:bg-black disabled:opacity-30"
+              >
+                {submitting ? 'Confirmando...' : 'Confirmar cita'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
