@@ -24,48 +24,49 @@ export default async function TenantPage({ params }: { params: { slug: string } 
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <header className="flex flex-col items-center gap-3 text-center">
+    <main className="min-h-screen bg-[#f5f5f7] px-6 py-16">
+      <header className="mx-auto flex max-w-sm flex-col items-center gap-3 text-center">
         {shop.logo_url && (
           <Image
             src={shop.logo_url}
             alt={shop.name}
-            width={80}
-            height={80}
+            width={64}
+            height={64}
             className="rounded-full object-cover"
           />
         )}
-        <h1 className="text-3xl font-bold">{shop.name}</h1>
-        {shop.description && <p className="max-w-md text-gray-600">{shop.description}</p>}
-        <p className="text-sm text-gray-500">
-          {shop.address ? `${shop.address}, ` : ''}
+        <h1 className="text-[28px] font-semibold tracking-tight text-[#1d1d1f]">{shop.name}</h1>
+        {shop.description && <p className="text-[15px] leading-snug text-[#86868b]">{shop.description}</p>}
+        <p className="text-[13px] text-[#86868b]">
+          {shop.address ? `${shop.address} · ` : ''}
           {shop.city}
         </p>
       </header>
 
       {hours && hours.length > 0 && (
-        <section className="mt-10">
-          <h2 className="mb-3 text-lg font-semibold">Horario</h2>
-          <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm text-gray-700 sm:grid-cols-1">
-            {hours.map((h: any) => (
-              <li key={h.day_of_week} className="flex justify-between border-b border-gray-100 py-1">
-                <span>{DAY_NAMES[h.day_of_week]}</span>
-                <span>{h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} - ${h.close_time?.slice(0, 5)}`}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div className="mx-auto mt-8 max-w-sm rounded-2xl bg-white px-5 py-4 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+          {hours.map((h: any) => (
+            <div
+              key={h.day_of_week}
+              className="flex justify-between border-b border-[#f0f0f0] py-2 text-[13px] last:border-0"
+            >
+              <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
+              <span className="font-medium text-[#1d1d1f]">
+                {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
+              </span>
+            </div>
+          ))}
+        </div>
       )}
 
-      <section className="mt-10">
-        <h2 className="mb-3 text-lg font-semibold">Reserva tu cita</h2>
+      <div className="mt-10">
         <BookingWidget
           barbershopId={shop.id}
           services={services ?? []}
           barbers={barbers ?? []}
           businessHours={hours ?? []}
         />
-      </section>
+      </div>
     </main>
   );
 }
