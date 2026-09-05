@@ -23,49 +23,84 @@ export default async function TenantPage({ params }: { params: { slug: string } 
     supabase.rpc('get_business_hours_public', { p_barbershop_id: shop.id }),
   ]);
 
+  const accent = shop.primary_color || '#1d1d1f';
+
   return (
-    <main className="min-h-screen bg-[#f5f5f7] px-6 py-16">
-      <header className="mx-auto flex max-w-sm flex-col items-center gap-3 text-center">
-        {shop.logo_url && (
-          <Image
-            src={shop.logo_url}
-            alt={shop.name}
-            width={64}
-            height={64}
-            className="rounded-full object-cover"
-          />
-        )}
-        <h1 className="text-[28px] font-semibold tracking-tight text-[#1d1d1f]">{shop.name}</h1>
-        {shop.description && <p className="text-[15px] leading-snug text-[#86868b]">{shop.description}</p>}
-        <p className="text-[13px] text-[#86868b]">
-          {shop.address ? `${shop.address} · ` : ''}
-          {shop.city}
-        </p>
-      </header>
-
-      {hours && hours.length > 0 && (
-        <div className="mx-auto mt-8 max-w-sm rounded-2xl bg-white px-5 py-4 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
-          {hours.map((h: any) => (
+    <main className="min-h-screen bg-[#f5f5f7]">
+      {/* Portada */}
+      <section
+        className="relative overflow-hidden px-6 pb-20 pt-24 text-center"
+        style={{
+          background: `radial-gradient(circle at 50% -10%, ${accent}55 0%, #0a0a0a 55%)`,
+        }}
+      >
+        <div className="relative mx-auto flex max-w-lg flex-col items-center gap-5">
+          {shop.logo_url ? (
+            <Image
+              src={shop.logo_url}
+              alt={shop.name}
+              width={72}
+              height={72}
+              className="rounded-full border border-white/10 object-cover"
+            />
+          ) : (
             <div
-              key={h.day_of_week}
-              className="flex justify-between border-b border-[#f0f0f0] py-2 text-[13px] last:border-0"
+              className="flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold text-white"
+              style={{ backgroundColor: accent }}
             >
-              <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
-              <span className="font-medium text-[#1d1d1f]">
-                {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
-              </span>
+              {shop.name.charAt(0).toUpperCase()}
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      <div className="mt-10">
-        <BookingWidget
-          barbershopId={shop.id}
-          services={services ?? []}
-          barbers={barbers ?? []}
-          businessHours={hours ?? []}
-        />
+          <h1 className="text-[40px] font-semibold leading-[1.05] tracking-tight text-white sm:text-[52px]">
+            {shop.name}
+          </h1>
+
+          {shop.description && (
+            <p className="max-w-sm text-[16px] leading-relaxed text-white/60">{shop.description}</p>
+          )}
+
+          <p className="text-[13px] uppercase tracking-wide text-white/40">
+            {shop.address ? `${shop.address} · ` : ''}
+            {shop.city}
+          </p>
+
+          
+            href="#reserva"
+            className="mt-4 rounded-full px-7 py-3 text-[15px] font-medium text-black transition hover:opacity-90"
+            style={{ backgroundColor: 'white' }}
+          >
+            Reservar cita
+          </a>
+        </div>
+      </section>
+
+      {/* Contenido */}
+      <div className="px-6 py-16">
+        {hours && hours.length > 0 && (
+          <div className="mx-auto max-w-sm rounded-2xl bg-white px-5 py-4 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+            {hours.map((h: any) => (
+              <div
+                key={h.day_of_week}
+                className="flex justify-between border-b border-[#f0f0f0] py-2 text-[13px] last:border-0"
+              >
+                <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
+                <span className="font-medium text-[#1d1d1f]">
+                  {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div id="reserva" className="mt-10 scroll-mt-10">
+          <BookingWidget
+            barbershopId={shop.id}
+            services={services ?? []}
+            barbers={barbers ?? []}
+            businessHours={hours ?? []}
+          />
+        </div>
       </div>
     </main>
   );
