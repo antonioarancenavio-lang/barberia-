@@ -11,18 +11,15 @@ type BusinessHour = { day_of_week: number; open_time: string | null; close_time:
 const STEPS = ['servicio', 'barbero', 'fecha', 'datos'] as const;
 type Step = (typeof STEPS)[number];
 
-const WEEKDAY_LABELS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-const MONTH_LABELS = [
-  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
-];
+const WEEKDAY_SHORT = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const DAYS_AHEAD = 21;
 
 function toISODate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-/** Calendario mensual propio: navegacion por meses, dias en circulo, estilo Apple Calendar. */
-function Calendar({
+/** Tira horizontal de fechas (estilo Booksy/apps de reservas): se desliza, sin cambiar de mes a mano. */
+function DateStrip({
   value,
   onChange,
   isDayDisabled,
@@ -35,97 +32,61 @@ function Calendar({
   today.setHours(0, 0, 0, 0);
   const todayISO = toISODate(today);
 
-  const initialMonth = value ? new Date(`${value}T00:00:00`) : today;
-  const [viewYear, setViewYear] = useState(initialMonth.getFullYear());
-  const [viewMonth, setViewMonth] = useState(initialMonth.getMonth());
-
-  const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
-
-  const firstOfMonth = new Date(viewYear, viewMonth, 1);
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  // Convierte getDay() (0=domingo) a indice con lunes primero (0=lunes).
-  const leadingBlanks = (firstOfMonth.getDay() + 6) % 7;
-
-  const cells: (Date | null)[] = [
-    ...Array.from({ length: leadingBlanks }, () => null),
-    ...Array.from({ length: daysInMonth }, (_, i) => new Date(viewYear, viewMonth, i + 1)),
-  ];
-
-  function prevMonth() {
-    if (isCurrentMonth) return;
-    const d = new Date(viewYear, viewMonth - 1, 1);
-    setViewYear(d.getFullYear());
-    setViewMonth(d.getMonth());
-  }
-
-  function nextMonth() {
-    const d = new Date(viewYear, viewMonth + 1, 1);
-    setViewYear(d.getFullYear());
-    setViewMonth(d.getMonth());
-  }
+  const days = Array.from({ length: DAYS_AHEAD }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    return d;
+  });
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={prevMonth}
-          disabled={isCurrentMonth}
-          aria-label="Mes anterior"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7] disabled:opacity-20"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        <p className="text-[15px] font-medium capitalize text-[#1d1d1f]">
-          {MONTH_LABELS[viewMonth]} {viewYear}
-        </p>
-        <button
-          type="button"
-          onClick={nextMonth}
-          aria-label="Mes siguiente"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7]"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      </div>
+    <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1" style={{ scrollbarWidth: 'none' }}>
+      {days.map((d) => {
+        const iso = toISODate(d);
+        const disabled = isDayDisabled(iso);
+        const isSelected = iso === value;
+        const isToday = iso === todayISO;
 
-      <div className="grid grid-cols-7 gap-y-1 text-center">
-        {WEEKDAY_LABELS.map((label) => (
-          <div key={label} className="pb-1 text-[12px] font-medium text-[#86868b]">
-            {label}
-          </div>
-        ))}
-        {cells.map((d, i) => {
-          if (!d) return <div key={`blank-${i}`} />;
-          const iso = toISODate(d);
-          const disabled = iso < todayISO || isDayDisabled(iso);
-          const isSelected = iso === value;
-          const isToday = iso === todayISO;
-
-          return (
-            <button
-              key={iso}
-              type="button"
-              disabled={disabled}
-              onClick={() => onChange(iso)}
-              className={[
-                'mx-auto flex h-9 w-9 items-center justify-center rounded-full text-[14px] transition',
-                disabled ? 'text-[#d2d2d7]' : 'text-[#1d1d1f] hover:bg-[#f5f5f7]',
-                isSelected ? 'bg-[#1d1d1f] text-white hover:bg-[#1d1d1f]' : '',
-                isToday && !isSelected ? 'ring-1 ring-inset ring-[#1d1d1f]/30' : '',
-              ].join(' ')}
-            >
-              {d.getDate()}
-            </button>
-          );
-        })}
-      </div>
+        return (
+          <button
+            key={iso}
+            type="button"
+            disabled={disabled}
+            onClick={() => onChange(iso)}
+            className={[
+              'flex w-14 shrink-0 flex-col items-center gap-1 rounded-2xl border py-2.5 transition',
+              disabled
+                ? 'border-[#f0f0f0] text-[#d2d2d7]'
+                : isSelected
+                ? 'border-[#1d1d1f] bg-[#1d1d1f] text-white'
+                : 'border-[#e5e5e7] text-[#1d1d1f] hover:border-[#1d1d1f]',
+            ].join(' ')}
+          >
+            <span className={`text-[11px] uppercase ${isSelected ? 'text-white/70' : 'text-[#86868b]'}`}>
+              {WEEKDAY_SHORT[d.getDay()]}
+            </span>
+            <span className="text-[16px] font-semibold">{d.getDate()}</span>
+            {isToday && !isSelected && <span className="h-1 w-1 rounded-full bg-[#1d1d1f]" />}
+          </button>
+        );
+      })}
     </div>
   );
+}
+
+/** Agrupa los huecos disponibles en Mañana / Tarde / Noche, como Booksy. */
+function groupSlots(slots: Slot[]) {
+  const groups: { label: string; slots: Slot[] }[] = [
+    { label: 'Mañana', slots: [] },
+    { label: 'Tarde', slots: [] },
+    { label: 'Noche', slots: [] },
+  ];
+  for (const slot of slots) {
+    const hour = new Date(slot.startISO).getHours();
+    if (hour < 14) groups[0].slots.push(slot);
+    else if (hour < 19) groups[1].slots.push(slot);
+    else groups[2].slots.push(slot);
+  }
+  return groups.filter((g) => g.slots.length > 0);
 }
 
 export function BookingWidget({
@@ -158,6 +119,7 @@ export function BookingWidget({
   const service = useMemo(() => services.find((s) => s.id === serviceId) ?? null, [services, serviceId]);
   const barber = useMemo(() => barbers.find((b) => b.id === barberId) ?? null, [barbers, barberId]);
   const stepIndex = STEPS.indexOf(step);
+  const slotGroups = useMemo(() => groupSlots(slots), [slots]);
 
   function goTo(next: Step) {
     setError(null);
@@ -331,9 +293,14 @@ export function BookingWidget({
               </svg>
             </button>
           )}
-          <p className="truncate text-[13px] text-[#86868b]">
+          <p className="flex-1 truncate text-[13px] text-[#86868b]">
             {[service?.name, barber?.name].filter(Boolean).join(' · ') || 'Reserva tu cita'}
           </p>
+          {service && (
+            <span className="shrink-0 rounded-full bg-[#f5f5f7] px-2.5 py-1 text-[12px] font-medium text-[#1d1d1f]">
+              {service.price}€ · {service.duration_minutes} min
+            </span>
+          )}
         </div>
 
         {/* Paso: servicio */}
@@ -388,7 +355,7 @@ export function BookingWidget({
           <div key="fecha" className="animate-[fadeIn_0.25s_ease]">
             <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
 
-            <Calendar value={date} onChange={handleDateChange} isDayDisabled={isDayClosed} />
+            <DateStrip value={date} onChange={handleDateChange} isDayDisabled={isDayClosed} />
 
             {date && (
               <div className="mt-6 border-t border-[#f0f0f0] pt-5">
@@ -396,20 +363,27 @@ export function BookingWidget({
                 {!loadingSlots && slots.length === 0 && (
                   <p className="text-[14px] text-[#86868b]">No hay horarios disponibles ese día.</p>
                 )}
-                {slots.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2">
-                    {slots.map((slot) => (
-                      <button
-                        key={slot.startISO}
-                        type="button"
-                        onClick={() => selectSlot(slot)}
-                        className="rounded-xl border border-[#e5e5e7] py-2.5 text-[14px] font-medium text-[#1d1d1f] transition hover:border-[#1d1d1f]"
-                      >
-                        {slot.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div className="flex flex-col gap-4">
+                  {slotGroups.map((group) => (
+                    <div key={group.label}>
+                      <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[#86868b]">
+                        {group.label}
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {group.slots.map((slot) => (
+                          <button
+                            key={slot.startISO}
+                            type="button"
+                            onClick={() => selectSlot(slot)}
+                            className="rounded-xl border border-[#e5e5e7] py-2.5 text-[14px] font-medium text-[#1d1d1f] transition hover:border-[#1d1d1f]"
+                          >
+                            {slot.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
