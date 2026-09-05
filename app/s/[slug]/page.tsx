@@ -34,7 +34,7 @@ export default async function TenantPage({ params }: { params: { slug: string } 
           background: `radial-gradient(circle at 50% -10%, ${accent}55 0%, #0a0a0a 55%)`,
         }}
       >
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-5">
+        <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
           {shop.logo_url ? (
             <Image
               src={shop.logo_url}
@@ -70,7 +70,7 @@ export default async function TenantPage({ params }: { params: { slug: string } 
       {/* Contenido */}
       <div className="px-6 py-16">
         {hours && hours.length > 0 && (
-          <div className="mx-auto max-w-3xl rounded-2xl bg-white px-6 py-5 shadow-[0_2px_24px_rgba(0,0,0,0.06)] sm:px-8">
+          <div className="mx-auto max-w-5xl rounded-2xl bg-white px-6 py-5 shadow-[0_2px_24px_rgba(0,0,0,0.06)] sm:px-8">
             <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
               {hours.map((h: any) => (
                 <div
