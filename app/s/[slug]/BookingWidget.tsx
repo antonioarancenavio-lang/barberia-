@@ -11,6 +11,123 @@ type BusinessHour = { day_of_week: number; open_time: string | null; close_time:
 const STEPS = ['servicio', 'barbero', 'fecha', 'datos'] as const;
 type Step = (typeof STEPS)[number];
 
+const WEEKDAY_LABELS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+const MONTH_LABELS = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
+
+function toISODate(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Calendario mensual propio: navegacion por meses, dias en circulo, estilo Apple Calendar. */
+function Calendar({
+  value,
+  onChange,
+  isDayDisabled,
+}: {
+  value: string;
+  onChange: (dateISO: string) => void;
+  isDayDisabled: (dateISO: string) => boolean;
+}) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayISO = toISODate(today);
+
+  const initialMonth = value ? new Date(`${value}T00:00:00`) : today;
+  const [viewYear, setViewYear] = useState(initialMonth.getFullYear());
+  const [viewMonth, setViewMonth] = useState(initialMonth.getMonth());
+
+  const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+
+  const firstOfMonth = new Date(viewYear, viewMonth, 1);
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  // Convierte getDay() (0=domingo) a indice con lunes primero (0=lunes).
+  const leadingBlanks = (firstOfMonth.getDay() + 6) % 7;
+
+  const cells: (Date | null)[] = [
+    ...Array.from({ length: leadingBlanks }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => new Date(viewYear, viewMonth, i + 1)),
+  ];
+
+  function prevMonth() {
+    if (isCurrentMonth) return;
+    const d = new Date(viewYear, viewMonth - 1, 1);
+    setViewYear(d.getFullYear());
+    setViewMonth(d.getMonth());
+  }
+
+  function nextMonth() {
+    const d = new Date(viewYear, viewMonth + 1, 1);
+    setViewYear(d.getFullYear());
+    setViewMonth(d.getMonth());
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={prevMonth}
+          disabled={isCurrentMonth}
+          aria-label="Mes anterior"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7] disabled:opacity-20"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <p className="text-[15px] font-medium capitalize text-[#1d1d1f]">
+          {MONTH_LABELS[viewMonth]} {viewYear}
+        </p>
+        <button
+          type="button"
+          onClick={nextMonth}
+          aria-label="Mes siguiente"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7]"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-y-1 text-center">
+        {WEEKDAY_LABELS.map((label) => (
+          <div key={label} className="pb-1 text-[12px] font-medium text-[#86868b]">
+            {label}
+          </div>
+        ))}
+        {cells.map((d, i) => {
+          if (!d) return <div key={`blank-${i}`} />;
+          const iso = toISODate(d);
+          const disabled = iso < todayISO || isDayDisabled(iso);
+          const isSelected = iso === value;
+          const isToday = iso === todayISO;
+
+          return (
+            <button
+              key={iso}
+              type="button"
+              disabled={disabled}
+              onClick={() => onChange(iso)}
+              className={[
+                'mx-auto flex h-9 w-9 items-center justify-center rounded-full text-[14px] transition',
+                disabled ? 'text-[#d2d2d7]' : 'text-[#1d1d1f] hover:bg-[#f5f5f7]',
+                isSelected ? 'bg-[#1d1d1f] text-white hover:bg-[#1d1d1f]' : '',
+                isToday && !isSelected ? 'ring-1 ring-inset ring-[#1d1d1f]/30' : '',
+              ].join(' ')}
+            >
+              {d.getDate()}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function BookingWidget({
   barbershopId,
   services,
@@ -41,7 +158,6 @@ export function BookingWidget({
   const service = useMemo(() => services.find((s) => s.id === serviceId) ?? null, [services, serviceId]);
   const barber = useMemo(() => barbers.find((b) => b.id === barberId) ?? null, [barbers, barberId]);
   const stepIndex = STEPS.indexOf(step);
-  const todayISO = new Date().toISOString().slice(0, 10);
 
   function goTo(next: Step) {
     setError(null);
@@ -67,6 +183,12 @@ export function BookingWidget({
     setSlots([]);
     setSelectedSlot(null);
     goTo('fecha');
+  }
+
+  function isDayClosed(dateISO: string) {
+    const dayOfWeek = new Date(`${dateISO}T00:00:00`).getDay();
+    const hoursForDay = businessHours.find((h) => h.day_of_week === dayOfWeek);
+    return !hoursForDay || hoursForDay.closed || !hoursForDay.open_time || !hoursForDay.close_time;
   }
 
   async function handleDateChange(value: string) {
@@ -265,16 +387,11 @@ export function BookingWidget({
         {step === 'fecha' && (
           <div key="fecha" className="animate-[fadeIn_0.25s_ease]">
             <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
-            <input
-              type="date"
-              min={todayISO}
-              value={date}
-              onChange={(e) => handleDateChange(e.target.value)}
-              className="w-full rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] text-[#1d1d1f] focus:border-[#1d1d1f] focus:outline-none"
-            />
+
+            <Calendar value={date} onChange={handleDateChange} isDayDisabled={isDayClosed} />
 
             {date && (
-              <div className="mt-5">
+              <div className="mt-6 border-t border-[#f0f0f0] pt-5">
                 {loadingSlots && <p className="text-[14px] text-[#86868b]">Buscando horarios...</p>}
                 {!loadingSlots && slots.length === 0 && (
                   <p className="text-[14px] text-[#86868b]">No hay horarios disponibles ese día.</p>
