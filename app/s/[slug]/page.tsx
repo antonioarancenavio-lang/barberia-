@@ -55,3 +55,45 @@ export default async function TenantPage({ params }: { params: { slug: string } 
           <h1 className="text-[40px] font-semibold leading-[1.05] tracking-tight text-white sm:text-[52px]">
             {shop.name}
           </h1>
+
+          {shop.description && (
+            <p className="max-w-sm text-[16px] leading-relaxed text-white/60">{shop.description}</p>
+          )}
+
+          <p className="text-[13px] uppercase tracking-wide text-white/40">
+            {shop.address ? `${shop.address} · ` : ''}
+            {shop.city}
+          </p>
+        </div>
+      </section>
+
+      {/* Contenido */}
+      <div className="px-6 py-16">
+        {hours && hours.length > 0 && (
+          <div className="mx-auto max-w-sm rounded-2xl bg-white px-5 py-4 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+            {hours.map((h: any) => (
+              <div
+                key={h.day_of_week}
+                className="flex justify-between border-b border-[#f0f0f0] py-2 text-[13px] last:border-0"
+              >
+                <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
+                <span className="font-medium text-[#1d1d1f]">
+                  {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div id="reserva" className="mt-10 scroll-mt-10">
+          <BookingWidget
+            barbershopId={shop.id}
+            services={services ?? []}
+            barbers={barbers ?? []}
+            businessHours={hours ?? []}
+          />
+        </div>
+      </div>
+    </main>
+  );
+}
