@@ -34,7 +34,7 @@ export default async function TenantPage({ params }: { params: { slug: string } 
           background: `radial-gradient(circle at 50% -10%, ${accent}55 0%, #0a0a0a 55%)`,
         }}
       >
-        <div className="relative mx-auto flex max-w-xl flex-col items-center gap-5">
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-5">
           {shop.logo_url ? (
             <Image
               src={shop.logo_url}
@@ -70,18 +70,20 @@ export default async function TenantPage({ params }: { params: { slug: string } 
       {/* Contenido */}
       <div className="px-6 py-16">
         {hours && hours.length > 0 && (
-          <div className="mx-auto max-w-md rounded-2xl bg-white px-5 py-4 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
-            {hours.map((h: any) => (
-              <div
-                key={h.day_of_week}
-                className="flex justify-between border-b border-[#f0f0f0] py-2 text-[13px] last:border-0"
-              >
-                <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
-                <span className="font-medium text-[#1d1d1f]">
-                  {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
-                </span>
-              </div>
-            ))}
+          <div className="mx-auto max-w-3xl rounded-2xl bg-white px-6 py-5 shadow-[0_2px_24px_rgba(0,0,0,0.06)] sm:px-8">
+            <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+              {hours.map((h: any) => (
+                <div
+                  key={h.day_of_week}
+                  className="flex justify-between border-b border-[#f0f0f0] py-2 text-[14px] last:border-0 sm:last:border-b"
+                >
+                  <span className="text-[#86868b]">{DAY_NAMES[h.day_of_week]}</span>
+                  <span className="font-medium text-[#1d1d1f]">
+                    {h.closed ? 'Cerrado' : `${h.open_time?.slice(0, 5)} – ${h.close_time?.slice(0, 5)}`}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

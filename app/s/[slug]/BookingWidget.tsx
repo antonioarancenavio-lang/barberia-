@@ -253,7 +253,7 @@ export function BookingWidget({
 
   if (confirmed) {
     return (
-      <div className="mx-auto max-w-md rounded-3xl bg-white px-8 py-12 text-center shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div className="mx-auto w-full max-w-2xl rounded-3xl bg-white px-8 py-16 text-center shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f5f7]">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <path
@@ -284,7 +284,7 @@ export function BookingWidget({
   }
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto w-full max-w-3xl">
       {/* Barra de progreso */}
       <div className="mb-6 flex gap-1.5">
         {STEPS.map((s, i) => (
@@ -297,7 +297,7 @@ export function BookingWidget({
         ))}
       </div>
 
-      <div className="rounded-3xl bg-white px-7 py-10 sm:px-9 sm:py-12 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div className="rounded-3xl bg-white px-8 py-12 sm:px-14 sm:py-16 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         {/* Cabecera: volver + resumen de lo ya elegido */}
         <div className="mb-6 flex min-h-[20px] items-center gap-2">
           {stepIndex > 0 && (
@@ -324,8 +324,8 @@ export function BookingWidget({
         {/* Paso: servicio */}
         {step === 'servicio' && (
           <div key="servicio" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Qué servicio quieres?</h2>
-            <div className="flex flex-col gap-2">
+            <h2 className="mb-6 text-[26px] font-semibold tracking-tight text-[#1d1d1f]">¿Qué servicio quieres?</h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {services.map((s) => (
                 <button
                   key={s.id}
@@ -348,8 +348,8 @@ export function BookingWidget({
         {/* Paso: barbero */}
         {step === 'barbero' && (
           <div key="barbero" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Con quién?</h2>
-            <div className="flex flex-col gap-2">
+            <h2 className="mb-6 text-[26px] font-semibold tracking-tight text-[#1d1d1f]">¿Con quién?</h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {barbers.map((b) => (
                 <button
                   key={b.id}
@@ -371,7 +371,7 @@ export function BookingWidget({
         {/* Paso: fecha y hora */}
         {step === 'fecha' && (
           <div key="fecha" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
+            <h2 className="mb-6 text-[26px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
 
             <DateStrip value={date} onChange={handleDateChange} isDayDisabled={isDayClosed} />
 
@@ -391,7 +391,7 @@ export function BookingWidget({
                       <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[#86868b]">
                         {group.label}
                       </p>
-                      <div className="grid grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
                         {group.slots.map((slot, slotIndex) => (
                           <button
                             key={slot.startISO}
@@ -415,7 +415,7 @@ export function BookingWidget({
         {/* Paso: datos del cliente */}
         {step === 'datos' && (
           <div key="datos" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-1 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">Tus datos</h2>
+            <h2 className="mb-1 text-[26px] font-semibold tracking-tight text-[#1d1d1f]">Tus datos</h2>
             {selectedSlot && (
               <p className="mb-5 text-[14px] text-[#86868b]">
                 {new Date(selectedSlot.startISO).toLocaleString('es-ES', {
@@ -428,20 +428,22 @@ export function BookingWidget({
               </p>
             )}
             <div className="flex flex-col gap-3">
-              <input
-                required
-                placeholder="Nombre"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
-              />
-              <input
-                required
-                placeholder="Teléfono"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
-              />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <input
+                  required
+                  placeholder="Nombre"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
+                />
+                <input
+                  required
+                  placeholder="Teléfono"
+                  value={clientPhone}
+                  onChange={(e) => setClientPhone(e.target.value)}
+                  className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
+                />
+              </div>
               <input
                 type="email"
                 placeholder="Email (opcional)"
