@@ -51,7 +51,7 @@ function DateStrip({
 
   return (
     <div
-      className="-mx-6 flex snap-x snap-proximity gap-2 overflow-x-auto scroll-smooth px-6 pb-2"
+      className="-mx-6 flex snap-x snap-proximity gap-2.5 overflow-x-auto scroll-smooth px-6 pb-2"
       style={{ scrollbarWidth: 'none' }}
     >
       {days.map((d) => {
@@ -70,7 +70,7 @@ function DateStrip({
             disabled={disabled}
             onClick={() => onChange(iso)}
             className={[
-              'flex w-14 shrink-0 snap-center flex-col items-center gap-1 rounded-2xl border py-2.5',
+              'flex w-16 shrink-0 snap-center flex-col items-center gap-1 rounded-2xl border py-2.5',
               'transition-all duration-200 ease-out active:scale-90',
               disabled
                 ? 'border-[#f0f0f0] text-[#d2d2d7]'
@@ -253,7 +253,7 @@ export function BookingWidget({
 
   if (confirmed) {
     return (
-      <div className="mx-auto max-w-sm rounded-3xl bg-white px-8 py-12 text-center shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div className="mx-auto max-w-md rounded-3xl bg-white px-8 py-12 text-center shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f5f7]">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
             <path
@@ -284,7 +284,7 @@ export function BookingWidget({
   }
 
   return (
-    <div className="mx-auto max-w-sm">
+    <div className="mx-auto max-w-md">
       {/* Barra de progreso */}
       <div className="mb-6 flex gap-1.5">
         {STEPS.map((s, i) => (
@@ -297,7 +297,7 @@ export function BookingWidget({
         ))}
       </div>
 
-      <div className="rounded-3xl bg-white px-6 py-8 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div className="rounded-3xl bg-white px-7 py-10 sm:px-9 sm:py-12 shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         {/* Cabecera: volver + resumen de lo ya elegido */}
         <div className="mb-6 flex min-h-[20px] items-center gap-2">
           {stepIndex > 0 && (
@@ -354,114 +354,3 @@ export function BookingWidget({
                 <button
                   key={b.id}
                   type="button"
-                  onClick={() => selectBarber(b)}
-                  className="flex items-center gap-3 rounded-2xl border border-[#e5e5e7] px-4 py-3.5 text-left transition-all duration-150 active:scale-[0.98] hover:border-[#1d1d1f]"
-                >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f5f5f7] text-[14px] font-medium text-[#1d1d1f]">
-                    {b.name.charAt(0).toUpperCase()}
-                  </span>
-                  <span className="text-[15px] font-medium text-[#1d1d1f]">{b.name}</span>
-                </button>
-              ))}
-              {barbers.length === 0 && <p className="text-[15px] text-[#86868b]">Aún no hay barberos disponibles.</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Paso: fecha y hora */}
-        {step === 'fecha' && (
-          <div key="fecha" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-5 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">¿Cuándo?</h2>
-
-            <DateStrip value={date} onChange={handleDateChange} isDayDisabled={isDayClosed} />
-
-            {date && (
-              <div className="mt-6 border-t border-[#f0f0f0] pt-5">
-                {loadingSlots && <p className="text-[14px] text-[#86868b]">Buscando horarios...</p>}
-                {!loadingSlots && slots.length === 0 && (
-                  <p className="text-[14px] text-[#86868b]">No hay horarios disponibles ese día.</p>
-                )}
-                <div className="flex flex-col gap-4">
-                  {slotGroups.map((group, groupIndex) => (
-                    <div
-                      key={group.label}
-                      className="animate-[fadeIn_0.3s_ease_both]"
-                      style={{ animationDelay: `${groupIndex * 60}ms` }}
-                    >
-                      <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-[#86868b]">
-                        {group.label}
-                      </p>
-                      <div className="grid grid-cols-3 gap-2">
-                        {group.slots.map((slot, slotIndex) => (
-                          <button
-                            key={slot.startISO}
-                            type="button"
-                            onClick={() => selectSlot(slot)}
-                            style={{ animationDelay: `${groupIndex * 60 + slotIndex * 20}ms` }}
-                            className="animate-[fadeIn_0.25s_ease_both] rounded-xl border border-[#e5e5e7] py-2.5 text-[14px] font-medium text-[#1d1d1f] transition-all duration-150 active:scale-90 hover:border-[#1d1d1f] hover:bg-[#f5f5f7]"
-                          >
-                            {slot.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Paso: datos del cliente */}
-        {step === 'datos' && (
-          <div key="datos" className="animate-[fadeIn_0.25s_ease]">
-            <h2 className="mb-1 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">Tus datos</h2>
-            {selectedSlot && (
-              <p className="mb-5 text-[14px] text-[#86868b]">
-                {new Date(selectedSlot.startISO).toLocaleString('es-ES', {
-                  weekday: 'long',
-                  day: 'numeric',
-                  month: 'long',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </p>
-            )}
-            <div className="flex flex-col gap-3">
-              <input
-                required
-                placeholder="Nombre"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
-              />
-              <input
-                required
-                placeholder="Teléfono"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
-              />
-              <input
-                type="email"
-                placeholder="Email (opcional)"
-                value={clientEmail}
-                onChange={(e) => setClientEmail(e.target.value)}
-                className="rounded-2xl border border-[#e5e5e7] px-4 py-3 text-[15px] transition focus:border-[#1d1d1f] focus:outline-none"
-              />
-              {error && <p className="text-[14px] text-red-600">{error}</p>}
-              <button
-                type="button"
-                disabled={!clientName || !clientPhone || submitting}
-                onClick={handleConfirm}
-                className="mt-2 rounded-full bg-[#1d1d1f] py-3.5 text-[15px] font-medium text-white transition-all duration-150 active:scale-[0.98] hover:bg-black disabled:opacity-30"
-              >
-                {submitting ? 'Confirmando...' : 'Confirmar cita'}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
