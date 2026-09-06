@@ -1,24 +1,22 @@
 import Link from 'next/link';
 
-// Landing completa (features, precios, FAQ) se desarrollara con detalle en
-// una fase posterior de UI. Esta version minima solo deja el flujo de auth navegable.
+// Placeholder de comprobacion visual para la Fase A (sistema de diseño).
+// La landing completa (hero, storytelling, pricing, FAQ...) se construye en la Fase B.
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-      <h1 className="text-4xl font-bold tracking-tight">
-        Tu barbería, tus citas, todo en un solo lugar.
+      <p className="eyebrow-label">Cortia</p>
+      <h1 className="max-w-xl font-display text-5xl font-medium leading-tight tracking-tight text-ink">
+        Tu barbería. Tu agenda. Todo bajo control.
       </h1>
+      <p className="max-w-md text-warm-700">
+        Gestiona tus citas, barberos y reservas online desde un solo lugar.
+      </p>
       <div className="flex gap-4">
-        <Link
-          href="/register"
-          className="rounded-lg bg-brand px-6 py-3 text-white hover:bg-brand-light"
-        >
-          Crear mi barbería
+        <Link href="/register" className="btn-primary">
+          Empezar gratis
         </Link>
-        <Link
-          href="/login"
-          className="rounded-lg border border-gray-300 px-6 py-3 hover:bg-gray-50"
-        >
+        <Link href="/login" className="btn-secondary">
           Iniciar sesión
         </Link>
       </div>
