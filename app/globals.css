@@ -508,3 +508,217 @@ html {
 .confirm-button:disabled {
   opacity: 0.3;
 }
+
+/* ============================================================
+   Landing page — Fase B
+   ============================================================ */
+
+.nav-link {
+  font-size: 14px;
+  color: #5c564a;
+  transition: color 0.15s ease;
+}
+
+.nav-link:hover {
+  color: #17171a;
+}
+
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #b5502a;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-fraunces);
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #17171a;
+  line-height: 1.15;
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 42px;
+  }
+}
+
+.hero-mock-card {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(23, 23, 26, 0.12);
+  border: 1px solid #f1eee8;
+}
+
+.hero-mock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1eee8;
+}
+
+.hero-mock-row:last-child {
+  border-bottom: none;
+}
+
+.hero-mock-time {
+  font-size: 13px;
+  color: #a39c8c;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.hero-mock-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #17171a;
+  flex: 1;
+}
+
+.hero-mock-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f1eee8;
+  color: #5c564a;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step-num {
+  font-family: var(--font-fraunces);
+  font-size: 40px;
+  color: #d9d4c8;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #17171a;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: #5c564a;
+  line-height: 1.5;
+}
+
+.benefit-card {
+  background: #ffffff;
+  border: 1px solid #f1eee8;
+  border-radius: 20px;
+  padding: 28px;
+}
+
+.benefit-title {
+  font-family: var(--font-fraunces);
+  font-size: 20px;
+  font-weight: 500;
+  color: #17171a;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.benefit-desc {
+  font-size: 14px;
+  color: #5c564a;
+  line-height: 1.5;
+}
+
+.pricing-card {
+  background: #ffffff;
+  border: 1px solid #f1eee8;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pricing-card-featured {
+  border: 2px solid #17171a;
+  position: relative;
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -14px;
+  left: 32px;
+  background: #17171a;
+  color: #faf9f6;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+.plan-name {
+  font-family: var(--font-fraunces);
+  font-size: 22px;
+  color: #17171a;
+}
+
+.plan-price {
+  font-size: 32px;
+  font-weight: 600;
+  color: #17171a;
+}
+
+.plan-price-period {
+  font-size: 14px;
+  font-weight: 400;
+  color: #a39c8c;
+}
+
+.plan-feature {
+  font-size: 14px;
+  color: #5c564a;
+  padding: 6px 0;
+  border-top: 1px solid #f1eee8;
+}
+
+.faq-item {
+  border-bottom: 1px solid #f1eee8;
+  padding: 20px 0;
+}
+
+.faq-question {
+  font-size: 16px;
+  font-weight: 500;
+  color: #17171a;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-answer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #5c564a;
+  line-height: 1.6;
+}
+
+.footer-link {
+  font-size: 14px;
+  color: #5c564a;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: #17171a;
+}
