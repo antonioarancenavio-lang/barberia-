@@ -33,23 +33,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white px-6 py-4">
-        <div className="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-h-screen bg-bg">
+      <header className="border-b border-warm-100 bg-surface px-6 py-4">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-semibold">{barbershop.name}</p>
-            <p className="text-xs text-gray-400">{barbershop.slug}.midominio.com</p>
+            <p className="font-display text-lg text-ink">{barbershop.name}</p>
+            <p className="text-xs text-warm-500">{barbershop.slug}.midominio.com</p>
           </div>
-          <nav className="flex flex-wrap gap-4 text-sm">
+          <nav className="flex flex-wrap gap-5 text-sm">
             {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href} className="text-gray-600 hover:text-black">
+              <Link key={item.href} href={item.href} className="nav-link">
                 {item.label}
               </Link>
             ))}
           </nav>
         </div>
       </header>
-      <div className="mx-auto max-w-4xl px-6 py-8">{children}</div>
+      <div className="mx-auto max-w-5xl px-6 py-8">{children}</div>
     </div>
   );
 }
