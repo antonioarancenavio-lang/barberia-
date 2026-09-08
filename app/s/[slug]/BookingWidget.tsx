@@ -115,8 +115,10 @@ export function BookingWidget(props: {
   services: Service[];
   barbers: Barber[];
   businessHours: BusinessHour[];
+  accentColor?: string;
 }) {
-  const { barbershopId, services, barbers, businessHours } = props;
+  const { barbershopId, services, barbers, businessHours, accentColor } = props;
+  const accentStyle = { '--shop-accent': accentColor || '#17171A' } as React.CSSProperties;
   const supabase = createClient();
 
   const [step, setStep] = useState<Step>('servicio');
@@ -262,7 +264,7 @@ export function BookingWidget(props: {
 
   if (confirmed) {
     return (
-      <div className="booking-card booking-confirmed">
+      <div className="booking-card booking-confirmed" style={accentStyle}>
         <div className="confirmed-check">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
             <path d="M5 13l4 4L19 7" stroke="#1d1d1f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -278,7 +280,7 @@ export function BookingWidget(props: {
   }
 
   return (
-    <div className="booking-wrapper">
+    <div className="booking-wrapper" style={accentStyle}>
       <div className="progress-track">
         {STEPS.map((s, i) => (
           <div key={s} className={i <= stepIndex ? 'progress-bar progress-bar-filled' : 'progress-bar'} />
@@ -309,9 +311,18 @@ export function BookingWidget(props: {
             <div className="option-grid">
               {services.map((s) => (
                 <button key={s.id} type="button" onClick={() => selectService(s)} className="option-card">
-                  <span className="option-main">
-                    <span className="option-name">{s.name}</span>
-                    <span className="option-meta">{s.duration_minutes} min</span>
+                  <span className="option-left">
+                    <span className="service-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <circle cx="6" cy="6" r="3" stroke="currentColor" strokeWidth="1.6" />
+                        <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.6" />
+                        <path d="M8.5 8.5L19 19M19 5L8.5 15.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                    <span className="option-main">
+                      <span className="option-name">{s.name}</span>
+                      <span className="option-meta">{s.duration_minutes} min</span>
+                    </span>
                   </span>
                   <span className="option-price">{s.price}€</span>
                 </button>
@@ -327,7 +338,11 @@ export function BookingWidget(props: {
             <div className="option-grid">
               {barbers.map((b) => (
                 <button key={b.id} type="button" onClick={() => selectBarber(b)} className="option-card">
-                  <span className="avatar-circle">{b.name.charAt(0).toUpperCase()}</span>
+                  {b.photo_url ? (
+                    <img src={b.photo_url} alt={b.name} className="avatar-photo" />
+                  ) : (
+                    <span className="avatar-circle">{b.name.charAt(0).toUpperCase()}</span>
+                  )}
                   <span className="option-name">{b.name}</span>
                 </button>
               ))}

@@ -5,6 +5,29 @@ import { BookingWidget } from './BookingWidget';
 
 const DAY_NAMES = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 
+function getOpenStatus(hours: any[]) {
+  const now = new Date();
+  const today = hours.find((h) => h.day_of_week === now.getDay());
+
+  if (!today || today.closed || !today.open_time || !today.close_time) {
+    return 'Cerrado hoy';
+  }
+
+  const [oh, om] = today.open_time.split(':').map(Number);
+  const [ch, cm] = today.close_time.split(':').map(Number);
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const openMinutes = oh * 60 + om;
+  const closeMinutes = ch * 60 + cm;
+
+  if (nowMinutes < openMinutes) {
+    return 'Cerrado ahora · abre a las ' + today.open_time.slice(0, 5);
+  }
+  if (nowMinutes >= closeMinutes) {
+    return 'Cerrado por hoy';
+  }
+  return 'Abierto ahora · cierra a las ' + today.close_time.slice(0, 5);
+}
+
 export default async function TenantPage({ params }: { params: { slug: string } }) {
   const supabase = createClient();
 
@@ -27,14 +50,15 @@ export default async function TenantPage({ params }: { params: { slug: string } 
   const barbers = barbersResult.data || [];
   const hours = hoursResult.data || [];
 
-  const accent = shop.primary_color || '#1d1d1f';
+  const accent = shop.primary_color || '#17171A';
   const gradientStyle = {
     background: 'radial-gradient(circle at 50% -10%, ' + accent + '55 0%, #17171A 55%)',
   };
+  const openStatus = hours.length > 0 ? getOpenStatus(hours) : null;
 
   return (
-    <main style={{ minHeight: '100vh', background: '#f5f5f7' }}>
-      <section style={{ ...gradientStyle, padding: '96px 24px 80px 24px', textAlign: 'center' }}>
+    <main style={{ minHeight: '100vh', background: '#FAF9F6' }}>
+      <section style={{ ...gradientStyle, padding: '96px 24px 64px 24px', textAlign: 'center' }}>
         <div style={{ maxWidth: 640, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
           {shop.logo_url ? (
             <Image
@@ -77,47 +101,49 @@ export default async function TenantPage({ params }: { params: { slug: string } 
             {shop.address ? shop.address + ' - ' : ''}
             {shop.city}
           </p>
+
+          {openStatus && (
+            <details style={{ marginTop: 4 }}>
+              <summary
+                style={{
+                  fontSize: 13,
+                  color: 'rgba(255,255,255,0.75)',
+                  cursor: 'pointer',
+                  listStyle: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: '999px', background: accent, display: 'inline-block' }} />
+                {openStatus}
+              </summary>
+              <div style={{ marginTop: 16, textAlign: 'left', maxWidth: 260, margin: '16px auto 0 auto' }}>
+                {hours.map((h: any) => (
+                  <div
+                    key={h.day_of_week}
+                    style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: 12.5 }}
+                  >
+                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{DAY_NAMES[h.day_of_week]}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      {h.closed ? 'Cerrado' : (h.open_time || '').slice(0, 5) + ' - ' + (h.close_time || '').slice(0, 5)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
         </div>
       </section>
 
-      <div style={{ padding: '64px 24px' }}>
-        {hours.length > 0 && (
-          <div
-            style={{
-              maxWidth: 640,
-              margin: '0 auto',
-              background: 'white',
-              borderRadius: 16,
-              padding: '20px 24px',
-              boxShadow: '0 2px 24px rgba(0,0,0,0.06)',
-            }}
-          >
-            {hours.map((h: any, i: number) => (
-              <div
-                key={h.day_of_week}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: '8px 0',
-                  fontSize: 14,
-                  borderBottom: i < hours.length - 1 ? '1px solid #f0f0f0' : 'none',
-                }}
-              >
-                <span style={{ color: '#86868b' }}>{DAY_NAMES[h.day_of_week]}</span>
-                <span style={{ fontWeight: 500, color: '#1d1d1f' }}>
-                  {h.closed ? 'Cerrado' : (h.open_time || '').slice(0, 5) + ' - ' + (h.close_time || '').slice(0, 5)}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div id="reserva" style={{ marginTop: 40, scrollMarginTop: 40 }}>
+      <div style={{ padding: '48px 24px 64px 24px' }}>
+        <div id="reserva" style={{ scrollMarginTop: 40 }}>
           <BookingWidget
             barbershopId={shop.id}
             services={services}
             barbers={barbers}
             businessHours={hours}
+            accentColor={accent}
           />
         </div>
       </div>
