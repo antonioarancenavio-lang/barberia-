@@ -115,12 +115,12 @@ html {
   height: 4px;
   flex: 1;
   border-radius: 999px;
-  background: #e5e5e7;
+  background: #d9d4c8;
   transition: background-color 0.3s ease;
 }
 
 .progress-bar-filled {
-  background: #1d1d1f;
+  background: #17171a;
 }
 
 .booking-card {
@@ -149,7 +149,7 @@ html {
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  background: #f5f5f7;
+  background: #f1eee8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,13 +159,13 @@ html {
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #1d1d1f;
+  color: #17171a;
 }
 
 .confirmed-sub {
   margin-top: 8px;
   font-size: 15px;
-  color: #86868b;
+  color: #5c564a;
   text-transform: capitalize;
 }
 
@@ -173,7 +173,7 @@ html {
   margin-top: 4px;
   font-size: 15px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
   text-transform: capitalize;
 }
 
@@ -193,12 +193,12 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1d1d1f;
+  color: #17171a;
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .back-button:hover {
-  background: #f5f5f7;
+  background: #f1eee8;
 }
 
 .back-button:active {
@@ -208,7 +208,7 @@ html {
 .booking-summary-line {
   flex: 1;
   font-size: 13px;
-  color: #86868b;
+  color: #5c564a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -217,18 +217,18 @@ html {
 .price-chip {
   flex-shrink: 0;
   border-radius: 999px;
-  background: #f5f5f7;
+  background: #f1eee8;
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
 }
 
 .step-title {
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #1d1d1f;
+  color: #17171a;
   margin-bottom: 24px;
 }
 
@@ -249,7 +249,7 @@ html {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid #e5e5e7;
+  border: 1px solid #d9d4c8;
   border-radius: 16px;
   padding: 16px;
   text-align: left;
@@ -258,7 +258,7 @@ html {
 }
 
 .option-card:hover {
-  border-color: #1d1d1f;
+  border-color: #17171a;
 }
 
 .option-card:active {
@@ -274,18 +274,18 @@ html {
 .option-name {
   font-size: 15px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
 }
 
 .option-meta {
   font-size: 13px;
-  color: #86868b;
+  color: #5c564a;
 }
 
 .option-price {
   font-size: 15px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
   white-space: nowrap;
 }
 
@@ -293,19 +293,19 @@ html {
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  background: #f5f5f7;
+  background: #f1eee8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
   flex-shrink: 0;
 }
 
 .empty-text {
   font-size: 15px;
-  color: #86868b;
+  color: #5c564a;
 }
 
 /* Tira de fechas */
@@ -337,7 +337,7 @@ html {
   gap: 4px;
   padding: 10px 0;
   border-radius: 16px;
-  border: 1px solid #e5e5e7;
+  border: 1px solid #d9d4c8;
   transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -346,24 +346,24 @@ html {
 }
 
 .date-pill-normal {
-  color: #1d1d1f;
+  color: #17171a;
 }
 
 .date-pill-normal:hover {
-  border-color: #1d1d1f;
+  border-color: #17171a;
   transform: scale(1.03);
 }
 
 .date-pill-selected {
-  background: #1d1d1f;
-  border-color: #1d1d1f;
+  background: #17171a;
+  border-color: #17171a;
   color: #ffffff;
   transform: scale(1.06);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
 .date-pill-disabled {
-  color: #d2d2d7;
+  color: #c9c2b0;
   border-color: #f0f0f0;
 }
 
@@ -382,7 +382,7 @@ html {
   width: 4px;
   height: 4px;
   border-radius: 999px;
-  background: #1d1d1f;
+  background: #17171a;
 }
 
 /* Horarios agrupados */
@@ -405,7 +405,7 @@ html {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #86868b;
+  color: #5c564a;
   margin-bottom: 8px;
 }
 
@@ -422,18 +422,18 @@ html {
 }
 
 .slot-button {
-  border: 1px solid #e5e5e7;
+  border: 1px solid #d9d4c8;
   border-radius: 12px;
   padding: 11px 0;
   font-size: 14px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #17171a;
   transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .slot-button:hover {
-  border-color: #1d1d1f;
-  background: #f5f5f7;
+  border-color: #17171a;
+  background: #f1eee8;
 }
 
 .slot-button:active {
@@ -444,7 +444,7 @@ html {
 
 .selected-slot-line {
   font-size: 14px;
-  color: #86868b;
+  color: #5c564a;
   text-transform: capitalize;
   margin-bottom: 20px;
 }
@@ -463,7 +463,7 @@ html {
 }
 
 .text-input {
-  border: 1px solid #e5e5e7;
+  border: 1px solid #d9d4c8;
   border-radius: 16px;
   padding: 12px 16px;
   font-size: 15px;
@@ -472,7 +472,7 @@ html {
 }
 
 .text-input:focus {
-  border-color: #1d1d1f;
+  border-color: #17171a;
   outline: none;
 }
 
@@ -489,7 +489,7 @@ html {
 .confirm-button {
   width: 100%;
   border-radius: 999px;
-  background: #1d1d1f;
+  background: #17171a;
   padding: 14px 0;
   font-size: 15px;
   font-weight: 500;
@@ -498,7 +498,7 @@ html {
 }
 
 .confirm-button:hover {
-  background: #000000;
+  background: #b5502a;
 }
 
 .confirm-button:active {
@@ -603,7 +603,7 @@ html {
   color: #d9d4c8;
 }
 
-.step-title {
+.step-name {
   font-size: 18px;
   font-weight: 600;
   color: #17171a;
