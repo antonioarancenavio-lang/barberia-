@@ -120,7 +120,7 @@ html {
 }
 
 .progress-bar-filled {
-  background: #17171a;
+  background: var(--shop-accent, #17171a);
 }
 
 .booking-card {
@@ -258,7 +258,7 @@ html {
 }
 
 .option-card:hover {
-  border-color: #17171a;
+  border-color: var(--shop-accent, #17171a);
 }
 
 .option-card:active {
@@ -350,13 +350,13 @@ html {
 }
 
 .date-pill-normal:hover {
-  border-color: #17171a;
+  border-color: var(--shop-accent, #17171a);
   transform: scale(1.03);
 }
 
 .date-pill-selected {
-  background: #17171a;
-  border-color: #17171a;
+  background: var(--shop-accent, #17171a);
+  border-color: var(--shop-accent, #17171a);
   color: #ffffff;
   transform: scale(1.06);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
@@ -432,7 +432,7 @@ html {
 }
 
 .slot-button:hover {
-  border-color: #17171a;
+  border-color: var(--shop-accent, #17171a);
   background: #f1eee8;
 }
 
@@ -489,16 +489,16 @@ html {
 .confirm-button {
   width: 100%;
   border-radius: 999px;
-  background: #17171a;
+  background: var(--shop-accent, #17171a);
   padding: 14px 0;
   font-size: 15px;
   font-weight: 500;
   color: #ffffff;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .confirm-button:hover {
-  background: #b5502a;
+  filter: brightness(0.85);
 }
 
 .confirm-button:active {
@@ -721,4 +721,33 @@ html {
 
 .footer-link:hover {
   color: #17171a;
+}
+
+
+/* Elementos visuales añadidos: icono de servicio y foto de barbero */
+
+.service-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--shop-accent, #17171a) 10%, white);
+  color: var(--shop-accent, #17171a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-photo {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
