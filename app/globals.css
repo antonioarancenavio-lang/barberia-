@@ -751,3 +751,258 @@ html {
   align-items: center;
   gap: 12px;
 }
+
+/* ============================================================
+   Rediseño de la pagina de reservas: layout con resumen fijo,
+   calendario de escritorio, "cualquiera disponible", confirmacion.
+   ============================================================ */
+
+.booking-layout {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .booking-layout {
+    max-width: 900px;
+    grid-template-columns: 1fr 300px;
+    align-items: start;
+  }
+}
+
+.booking-main {
+  min-width: 0;
+}
+
+.booking-sidebar {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .booking-sidebar {
+    display: block;
+    position: sticky;
+    top: 32px;
+  }
+}
+
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #f1eee8;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.summary-eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a39c8c;
+  margin-bottom: 12px;
+}
+
+.summary-service {
+  font-family: var(--font-fraunces, serif);
+  font-size: 20px;
+  color: #17171a;
+  margin-bottom: 6px;
+}
+
+.summary-line {
+  font-size: 14px;
+  color: #5c564a;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.summary-total {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1eee8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #5c564a;
+}
+
+.summary-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #17171a;
+}
+
+.mobile-summary-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  background: #ffffff;
+  border-top: 1px solid #f1eee8;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 1024px) {
+  .mobile-summary-bar {
+    display: none;
+  }
+}
+
+.mobile-summary-text {
+  font-size: 13px;
+  color: #5c564a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-summary-price {
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #17171a;
+}
+
+.option-card-recommended {
+  border-color: var(--shop-accent, #17171a);
+  gap: 12px;
+}
+
+.selected-date-label {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #17171a;
+  margin-bottom: 12px;
+}
+
+.confirmed-price {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #17171a;
+}
+
+.confirmed-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.confirmed-actions .btn-secondary {
+  padding: 10px 18px;
+  font-size: 13px;
+}
+
+/* Calendario de mes (escritorio) */
+
+.cal-desktop-only {
+  display: none;
+}
+
+.cal-mobile-only {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .cal-desktop-only {
+    display: block;
+  }
+  .cal-mobile-only {
+    display: none;
+  }
+}
+
+.cal-wrapper {
+  border: 1px solid #f1eee8;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cal-nav {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #17171a;
+  transition: background-color 0.15s ease;
+}
+
+.cal-nav:hover {
+  background: #f1eee8;
+}
+
+.cal-nav:disabled {
+  opacity: 0.2;
+}
+
+.cal-title {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #17171a;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.cal-weekday {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #a39c8c;
+  padding-bottom: 6px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #17171a;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.cal-day:hover:not(:disabled) {
+  background: #f1eee8;
+}
+
+.cal-day:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.cal-day-today {
+  box-shadow: inset 0 0 0 1px var(--shop-accent, #17171a);
+}
+
+.cal-day-selected {
+  background: var(--shop-accent, #17171a);
+  color: #ffffff;
+}
+
+.cal-day-disabled {
+  color: #d9d4c8;
+}
