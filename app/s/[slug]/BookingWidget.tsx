@@ -413,7 +413,11 @@ export function BookingWidget(props: {
     });
 
     if (result.error) {
-      setError('Ese horario se acaba de ocupar. Elige otra hora.');
+      if (result.error.message.includes('plan_limit_appointments')) {
+        setError('Esta barbería ha alcanzado su límite de citas este mes. Prueba a contactar directamente.');
+      } else {
+        setError('Ese horario se acaba de ocupar. Elige otra hora.');
+      }
       setSubmitting(false);
       goTo('fecha');
       return;
