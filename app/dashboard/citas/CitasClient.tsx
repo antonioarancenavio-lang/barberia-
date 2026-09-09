@@ -106,7 +106,11 @@ export function CitasClient({
     });
 
     if (error) {
-      setFormError('Ese barbero ya tiene una cita a esa hora.');
+      if (error.message.includes('plan_limit_appointments')) {
+        setFormError('Has alcanzado el límite de citas de tu plan este mes. Mejora tu plan para añadir más.');
+      } else {
+        setFormError('Ese barbero ya tiene una cita a esa hora.');
+      }
       setSaving(false);
       return;
     }
