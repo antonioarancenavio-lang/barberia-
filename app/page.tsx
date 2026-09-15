@@ -15,7 +15,7 @@ export default function HomePage() {
           </nav>
           <div className="flex items-center gap-3">
             <Link href="/login" className="nav-link hidden sm:block">Iniciar sesión</Link>
-            <Link href="/register" className="btn-primary !px-5 !py-2 !text-[14px]">Empezar gratis</Link>
+            <Link href="/register" className="btn-primary !px-5 !py-2 !text-[14px]">Crear mi agenda gratis</Link>
           </div>
         </div>
       </header>
@@ -23,17 +23,18 @@ export default function HomePage() {
       {/* HERO */}
       <section className="mx-auto grid max-w-6xl gap-12 px-6 py-20 sm:py-28 lg:grid-cols-2 lg:items-center">
         <div>
-          <p className="section-eyebrow">Gestión para barberías</p>
+          <p className="section-eyebrow">Para barberías</p>
           <h1 className="font-display text-5xl font-medium leading-[1.1] tracking-tight text-ink sm:text-6xl">
-            Tu barbería. Tu agenda. Todo bajo control.
+            Deja de responder mensajes.<br />Empieza a recibir reservas.
           </h1>
           <p className="mt-6 max-w-md text-lg text-warm-700">
-            Gestiona tus citas, barberos y reservas online desde un solo lugar.
+            Tus clientes reservan su corte online las 24 horas, aunque estés ocupado cortando.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/register" className="btn-primary">Empezar gratis</Link>
+            <Link href="/register" className="btn-primary">Crear mi agenda gratis</Link>
             <a href="#como-funciona" className="btn-secondary">Ver cómo funciona</a>
           </div>
+          <p className="mt-4 text-sm text-warm-500">Sin tarjeta · Sin permanencia · Configuración en 2 minutos</p>
         </div>
 
         <div className="flex justify-center lg:justify-end">
@@ -65,23 +66,22 @@ export default function HomePage() {
 
       {/* PROBLEMA */}
       <section className="border-y border-warm-100 bg-surface px-6 py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="section-title">Tu día ya es suficientemente complicado.</h2>
-          <div className="mt-10 grid grid-cols-2 gap-6 text-left sm:grid-cols-4">
-            {['Llamadas a deshoras', 'WhatsApps sin contestar', 'Huecos sin cubrir', 'Agenda de papel'].map((item) => (
-              <div key={item} className="text-sm text-warm-700">
-                <div className="mb-2 h-px w-8 bg-warm-300" />
-                {item}
-              </div>
-            ))}
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="section-title">Tu WhatsApp no debería ser tu agenda.</h2>
+          <div className="mt-10 flex flex-col gap-3 text-left">
+            <p className="text-warm-700">❌ "¿Tienes hueco mañana?"</p>
+            <p className="text-warm-700">❌ "¿A qué hora puedo ir?"</p>
+            <p className="text-warm-700">❌ "¿Me puedes apuntar para el viernes?"</p>
+            <p className="text-warm-700">❌ "¿A qué hora tenía la cita?"</p>
+            <p className="text-warm-700">❌ Mensajes esperando respuesta mientras tienes las manos ocupadas.</p>
           </div>
         </div>
       </section>
 
-      {/* TRANSFORMACION */}
+      {/* SOLUCION */}
       <section className="px-6 py-20">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="section-title">Cortia pone orden.</h2>
+          <h2 className="section-title">Tus clientes reservan solos, mientras tú cortas.</h2>
           <p className="mx-auto mt-4 max-w-xl text-warm-700">
             Agenda, reservas, barberos, servicios y horarios, todo en el mismo lugar — sin cuadernos, sin
             hojas de cálculo, sin depender de estar pendiente del móvil todo el día.
@@ -89,25 +89,51 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ANTES / DESPUES */}
+      <section className="border-y border-warm-100 bg-surface px-6 py-20">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="section-title mb-10 text-center">Antes y después de Cortia</h2>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="benefit-card">
+              <p className="mb-4 text-xs font-medium uppercase tracking-wide text-warm-500">Sin Cortia</p>
+              <p className="text-warm-700">📱 WhatsApps sin parar</p>
+              <p className="mt-2 text-warm-700">📞 Llamadas a deshoras</p>
+              <p className="mt-2 text-warm-700">📒 Agenda de papel</p>
+              <p className="mt-2 text-warm-700">❌ Clientes esperando</p>
+              <p className="mt-2 text-warm-700">❌ Huecos vacíos</p>
+              <p className="mt-2 text-warm-700">❌ Citas olvidadas</p>
+            </div>
+            <div className="benefit-card" style={{ borderColor: '#B5502A' }}>
+              <p className="mb-4 text-xs font-medium uppercase tracking-wide text-accent">Con Cortia</p>
+              <p className="text-ink">📅 Agenda siempre organizada</p>
+              <p className="mt-2 text-ink">📲 Reservas automáticas</p>
+              <p className="mt-2 text-ink">🔔 Aviso de cada cita nueva</p>
+              <p className="mt-2 text-ink">⏰ Horarios claros para todos</p>
+              <p className="mt-2 text-ink">💈 Tú, dedicado a cortar</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* COMO FUNCIONA */}
-      <section id="como-funciona" className="border-y border-warm-100 bg-surface px-6 py-20">
+      <section id="como-funciona" className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <p className="section-eyebrow text-center">Cómo funciona</p>
           <h2 className="section-title text-center">Tres pasos. Nada más.</h2>
           <div className="mt-14 grid gap-10 sm:grid-cols-3">
             <div className="step-item">
               <span className="step-num">01</span>
-              <span className="step-title">Configura tu barbería</span>
+              <span className="step-name">Configura tu barbería</span>
               <span className="step-desc">Servicios, precios, barberos y horarios. Diez minutos y listo.</span>
             </div>
             <div className="step-item">
               <span className="step-num">02</span>
-              <span className="step-title">Comparte tu enlace</span>
+              <span className="step-name">Comparte tu enlace</span>
               <span className="step-desc">Tu propia página de reservas, lista para poner en Instagram o Google.</span>
             </div>
             <div className="step-item">
               <span className="step-num">03</span>
-              <span className="step-title">Empieza a recibir reservas</span>
+              <span className="step-name">Empieza a recibir reservas</span>
               <span className="step-desc">Tus clientes reservan solos. Tú solo tienes que abrir la puerta.</span>
             </div>
           </div>
@@ -115,7 +141,7 @@ export default function HomePage() {
       </section>
 
       {/* PRODUCTO / RESERVAS */}
-      <section id="producto" className="px-6 py-20">
+      <section id="producto" className="border-y border-warm-100 bg-surface px-6 py-20">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-eyebrow">La experiencia de tu cliente</p>
           <h2 className="section-title">Tan sencillo que se reserva solo.</h2>
@@ -132,27 +158,39 @@ export default function HomePage() {
       </section>
 
       {/* BENEFICIOS */}
-      <section className="border-y border-warm-100 bg-surface px-6 py-20">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="benefit-card">
-              <p className="benefit-title">Deja de vivir pendiente del teléfono.</p>
-              <p className="benefit-desc">Las reservas entran solas, mientras estás con un cliente en el sillón.</p>
+              <p className="benefit-title">📅 Tu agenda siempre organizada</p>
+              <p className="benefit-desc">Olvídate de apuntar citas a mano o de perder el hilo con el móvil.</p>
             </div>
             <div className="benefit-card">
-              <p className="benefit-title">Tus clientes reservan incluso cuando estás trabajando.</p>
-              <p className="benefit-desc">Tu página está abierta las 24 horas, aunque tú no lo estés.</p>
+              <p className="benefit-title">📲 Reservas 24/7</p>
+              <p className="benefit-desc">Tus clientes reservan incluso cuando estás trabajando o cerrado.</p>
             </div>
             <div className="benefit-card">
-              <p className="benefit-title">Todos saben qué tienen y cuándo lo tienen.</p>
-              <p className="benefit-desc">Cada barbero ve su propia agenda, sin confusiones ni dobles citas.</p>
+              <p className="benefit-title">💈 Menos WhatsApp</p>
+              <p className="benefit-desc">Deja que tus clientes gestionen sus propias reservas, sin escribirte.</p>
+            </div>
+            <div className="benefit-card">
+              <p className="benefit-title">🔔 Aviso de cada cita nueva</p>
+              <p className="benefit-desc">Sabrás al momento cuándo entra una reserva, sin estar mirando el móvil.</p>
+            </div>
+            <div className="benefit-card">
+              <p className="benefit-title">👥 Gestiona tu equipo</p>
+              <p className="benefit-desc">Cada barbero tiene su propia agenda, sin confusiones ni dobles citas.</p>
+            </div>
+            <div className="benefit-card">
+              <p className="benefit-title">✂️ Tu página, con tu marca</p>
+              <p className="benefit-desc">Logo y color propios — no parece una web genérica de terceros.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="precios" className="px-6 py-20">
+      <section id="precios" className="border-y border-warm-100 bg-surface px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
             <p className="section-eyebrow">Precios</p>
@@ -171,7 +209,7 @@ export default function HomePage() {
                 <p className="plan-feature">30 citas al mes</p>
                 <p className="plan-feature">Página de reservas propia</p>
               </div>
-              <Link href="/register" className="btn-secondary mt-auto">Empezar gratis</Link>
+              <Link href="/register" className="btn-secondary mt-auto">Crear mi agenda gratis</Link>
             </div>
 
             <div className="pricing-card pricing-card-featured">
@@ -181,6 +219,7 @@ export default function HomePage() {
                 <span className="plan-price">19€</span>
                 <span className="plan-price-period"> /mes</span>
               </div>
+              <p className="text-xs text-warm-500">Menos de 1€ al día — menos de lo que cuesta perder un cliente por no contestar a tiempo.</p>
               <div>
                 <p className="plan-feature">Hasta 5 barberos</p>
                 <p className="plan-feature">Citas ilimitadas</p>
@@ -207,44 +246,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRUEBA SOCIAL (sin inventar nada) */}
-      <section className="border-y border-warm-100 bg-surface px-6 py-16 text-center">
-        <p className="section-eyebrow">Diseñado para barberías</p>
-        <p className="mx-auto max-w-lg text-warm-700">
-          Cortia está en fase de acceso anticipado. Si eres de los primeros en probarlo, tu opinión moldea
-          el producto — únete al programa fundador.
-        </p>
+      {/* PROGRAMA FUNDADOR */}
+      <section className="px-6 py-20 text-center">
+        <div className="mx-auto max-w-lg">
+          <p className="section-eyebrow">Programa fundador</p>
+          <h2 className="section-title">Buscamos las primeras 20 barberías.</h2>
+          <p className="mt-4 text-warm-700">
+            6 meses de Cortia Pro gratis. A cambio, solo queremos tu opinión sincera para mejorar el producto.
+          </p>
+          <div className="mt-8">
+            <Link href="/register" className="btn-primary">Quiero ser barbería fundadora</Link>
+          </div>
+        </div>
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-6 py-20">
+      <section id="faq" className="border-y border-warm-100 bg-surface px-6 py-20">
         <div className="mx-auto max-w-2xl">
           <p className="section-eyebrow text-center">Preguntas frecuentes</p>
           <h2 className="section-title mb-10 text-center">Lo que sueles preguntar</h2>
 
           <details className="faq-item">
-            <summary className="faq-question">¿Necesito instalar algo?</summary>
-            <p className="faq-answer">No. Cortia funciona desde el navegador, tanto para ti como para tus clientes.</p>
+            <summary className="faq-question">¿Quién está detrás de Cortia?</summary>
+            <p className="faq-answer">Un proyecto español en fase inicial. Por eso buscamos las primeras barberías fundadoras y cuidamos cada detalle con quien lo prueba.</p>
           </details>
           <details className="faq-item">
-            <summary className="faq-question">¿Mis clientes necesitan registrarse?</summary>
-            <p className="faq-answer">No. Reservan con su nombre y teléfono, sin crear ninguna cuenta.</p>
+            <summary className="faq-question">¿Mis clientes tienen que descargar algo?</summary>
+            <p className="faq-answer">No. Reservan desde el navegador, con su nombre y teléfono, sin crear ninguna cuenta.</p>
           </details>
           <details className="faq-item">
-            <summary className="faq-question">¿Puedo tener varios barberos?</summary>
-            <p className="faq-answer">Sí, según tu plan. Cada barbero tiene su propia agenda dentro de tu barbería.</p>
+            <summary className="faq-question">¿Puedo seguir usando WhatsApp?</summary>
+            <p className="faq-answer">Sí, cuando quieras. Cortia quita el trabajo repetitivo, no te obliga a dejar nada.</p>
           </details>
           <details className="faq-item">
-            <summary className="faq-question">¿Puedo cambiar mis horarios cuando quiera?</summary>
-            <p className="faq-answer">Sí, desde tu panel, en cualquier momento, incluidos días sueltos o vacaciones.</p>
+            <summary className="faq-question">¿Puedo usarlo si trabajo solo?</summary>
+            <p className="faq-answer">Sí, el plan Free está pensado exactamente para eso: 1 barbero, sin coste.</p>
+          </details>
+          <details className="faq-item">
+            <summary className="faq-question">¿Puedo poner mi enlace en Instagram?</summary>
+            <p className="faq-answer">Sí, es lo habitual — muchas barberías lo ponen en la biografía o en el enlace de "reservar cita".</p>
           </details>
           <details className="faq-item">
             <summary className="faq-question">¿Puedo cancelar cuando quiera?</summary>
-            <p className="faq-answer">Sí, sin permanencia. Cancelas cuando quieras desde tu panel.</p>
-          </details>
-          <details className="faq-item">
-            <summary className="faq-question">¿Qué ocurre con mis datos?</summary>
-            <p className="faq-answer">Son tuyos. Solo tú (y quien tú autorices) puedes ver los datos de tu barbería.</p>
+            <p className="faq-answer">Sí, sin permanencia, desde tu panel en cualquier momento.</p>
           </details>
           <details className="faq-item">
             <summary className="faq-question">¿Puedo probarlo gratis?</summary>
@@ -256,11 +300,12 @@ export default function HomePage() {
       {/* CTA FINAL */}
       <section className="bg-ink px-6 py-24 text-center">
         <h2 className="mx-auto max-w-xl font-display text-4xl font-medium leading-tight text-bg sm:text-5xl">
-          Tu barbería ya tiene clientes. Ahora dale una agenda que esté a la altura.
+          Tu próxima reserva podría llegar mientras estás cortando.
         </h2>
+        <p className="mx-auto mt-4 max-w-md text-warm-500">Crea tu agenda online y deja que tus clientes hagan el resto.</p>
         <div className="mt-8">
           <Link href="/register" className="btn-primary !bg-accent hover:!bg-white hover:!text-ink">
-            Empezar gratis
+            Crear mi agenda gratis
           </Link>
         </div>
       </section>

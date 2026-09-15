@@ -19,14 +19,14 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://barberia-i66v.verc
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Cortia — Tu barbería. Tu agenda. Todo bajo control.',
+    default: 'Cortia — Agenda y reservas online para barberías',
     template: '%s · Cortia',
   },
-  description: 'Gestiona tus citas, barberos y reservas online desde un solo lugar.',
-  keywords: ['barbería', 'reservas online', 'gestión de citas', 'agenda barbería', 'software barbería'],
+  description: 'Software de gestión y reservas online para barberías. Deja que tus clientes reserven su cita sin WhatsApp, con tu propia agenda digital. Empieza gratis.',
+  keywords: ['agenda barbería', 'reservas barbería', 'software barbería', 'citas barbería', 'reservas online barbería', 'gestión barbería', 'agenda digital barbería'],
   openGraph: {
-    title: 'Cortia — Tu barbería. Tu agenda. Todo bajo control.',
-    description: 'Gestiona tus citas, barberos y reservas online desde un solo lugar.',
+    title: 'Cortia — Agenda y reservas online para barberías',
+    description: 'Software de gestión y reservas online para barberías. Deja que tus clientes reserven su cita sin WhatsApp.',
     url: SITE_URL,
     siteName: 'Cortia',
     locale: 'es_ES',
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cortia — Tu barbería. Tu agenda. Todo bajo control.',
-    description: 'Gestiona tus citas, barberos y reservas online desde un solo lugar.',
+    title: 'Cortia — Agenda y reservas online para barberías',
+    description: 'Software de gestión y reservas online para barberías. Deja que tus clientes reserven su cita sin WhatsApp.',
   },
 };
 
